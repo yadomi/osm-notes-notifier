@@ -13,7 +13,7 @@ node index.js ./config.yml
 Or with docker (with a `config.yml` in the current directoy)
 
 ```
-docker run -it --rm --name osmnotes -v $PWD:/data
+docker run yadomi/osm-notes-notifier -it --rm --name osmnotes -v $PWD:/data
 ```
 
 ## Configuration file
