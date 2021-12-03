@@ -1,15 +1,17 @@
+const { resolve } = require('path')
+const fs = require('fs')
+
 const axios = require("axios").default;
 const { XMLParser } = require("fast-xml-parser");
 const parser = new XMLParser();
 const ms = require('ms');
 const yaml = require('js-yaml')
-const fs = require('fs')
 const { differenceWith, values, keys, compose, flatten, reduce, toPairs } = require("ramda");
 const MQTT = require("async-mqtt");
 
-
-const config = yaml.load(fs.readFileSync("./config.yml", "utf8"));
-
+const args = process.argv.slice(2);
+const configPath = args[0] ? resolve(args[0]) : "./config.yml"; 
+const config = yaml.load(fs.readFileSync(configPath, "utf8"));
 
 const instance = axios.create({
   baseURL: "https://www.openstreetmap.org/api/0.6/notes",
