@@ -92,8 +92,6 @@ async function setup () {
   const { mqtt: { broker, topic = 'osm/note', ...mqttOptions } } = config
   const mqtt = await MQTT.connectAsync(broker, mqttOptions);
 
-  mqtt.on("connect", () => console.log('MQTT: Connected'));
-
   const onUpdate = update => {
     return mqtt.publish(topic, JSON.stringify(update));
   }
