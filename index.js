@@ -20,19 +20,26 @@ const initialState = keys(config.bbox).reduce((sum, bbox) => {
   return sum;
 }, {});
 
+const Type = {
+  NEW: "new", 
+  COMMENT: "comment", 
+  CLOSED: "closed", 
+  REACTIVATED: "reactivated", 
+}
+
 async function get (bbox) {
     const response = await instance.get("/feed?bbox=" + bbox);
 
     const { rss: { channel: { item } } } = parser.parse(response.data);
     const feed = item.reduce((sum, note) => {
         if (note.title.startsWith("new note")) {
-          note.type = "new";
+          note.type = Type.NEW;
         } else if (note.title.startsWith("new comment")) {
-          note.type = "comment";
+          note.type = Type.COMMENT;
         } else if (note.title.startsWith("closed note")) {
-          note.type = "closed";
+          note.type = Type.CLOSED;
         } else if (note.title.startsWith("reactivated note")) {
-          note.type = "reactivated";
+          note.type = Type.REACTIVATED;
         }
 
         note.link = note.link.split("#")[0];
@@ -63,7 +70,7 @@ function compare (notes, initialState) {
 }
 
 async function update (bbox, onUpdate) {
-    const types = config.bbox[bbox] || ["new", "comment", "closed", "reactivated"];
+    const types = config.bbox[bbox] || Object.values(Type);
     console.log('OSM: Fetching ' + bbox, types);
 
     const notes = await get(bbox);
